@@ -264,6 +264,8 @@ def edit_post(post_id):
 @admin_only
 def delete_post(post_id):
     post_to_delete = db.get_or_404(BlogPost, post_id)
+    for comment in post_to_delete.comments:
+        db.session.delete(comment)
     db.session.delete(post_to_delete)
     db.session.commit()
     return redirect(url_for('get_all_posts'))
@@ -278,9 +280,9 @@ def about():
 def contact():
     return render_template("contact.html", current_user=current_user)
 
-# Optional: You can include the email sending code from Day 60:
-# DON'T put your email and password here directly! The code will be visible when you upload to Github.
-# Use environment variables instead (Day 35)
+# Optional: You can include the email sending code
+# DON'T put your email and password here directly!
+# Use environment variables instead
 
 # MAIL_ADDRESS = os.environ.get("EMAIL_KEY")
 # MAIL_APP_PW = os.environ.get("PASSWORD_KEY")
